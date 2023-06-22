@@ -7,7 +7,7 @@
  
 
 %token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE
-%token WHILE,TRUE, FALSE, IF, ELSE
+%token WHILE, FOR, TRUE, FALSE, IF, ELSE
 %token EQ, LEQ, GEQ, NEQ 
 %token AND, OR, INCR, DO
 
@@ -124,6 +124,9 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
 			System.out.println("\tPOPL %EAX");
 			pRot.push(proxRot);  proxRot += 4;
 			System.out.printf("rot_%02d:\n",pRot.peek());
+
+
+
 			} 
 			ExpOpc ';'
 			 {
@@ -132,15 +135,28 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
 				System.out.printf("\tJE rot_%02d\n", pRot.peek() + 1);
 				System.out.printf("\tJMP rot_%02d\n", pRot.peek() + 2);
 				System.out.printf("rot_%02d:\n",pRot.peek() + 3);
+
+				//implementação
+
+				
+
+
 			 }
 			ExpOpc
 			{
 				System.out.printf("\tJMP rot_%02d\n", pRot.peek());
 				System.out.printf("rot_%02d:\n",pRot.peek() + 2);
+
+				//implementação
+
 			}
 			')' cmd {
 				System.out.printf("\tJMP rot_%02d\n", pRot.peek() + 3);
 				System.out.printf("rot_%02d:\n",pRot.peek() + 1);
+
+				//implementação
+
+				
 
 			} 
 							
