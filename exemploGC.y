@@ -403,7 +403,7 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
 	}
 
    private void geraInicio() {
-			System.out.println(".text\n\n#\t nome COMPLETO e matricula dos componentes do grupo...\n#\n"); 
+			System.out.println(".text\n\n#\t GILBERTO LUIS KOERBES JUNIOR - 20204011 \n#\t Mateus Rampon - 172009326 \n#\t Igor Cardona Alves - 181061508...\n#\n"); 
 			System.out.println(".GLOBL _start\n\n");  
    }
 

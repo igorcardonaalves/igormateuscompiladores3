@@ -6,80 +6,15 @@
 .GLOBL _start
 
 
-_start:
-	PUSHL $0
-	POPL %EDX
-	PUSHL %EDX
-	MOVL %EDX, _i
 	POPL %EAX
+	IMULL $4, %EAX
+	SUB %ESP, %EAX
 rot_01:
-	PUSHL _i
-	PUSHL $10
-	POPL %EAX
-	POPL %EDX
-	CMPL %EAX, %EDX
-	MOVL $0, %EAX
-	SETL  %AL
-	PUSHL %EAX
-	POPL %EAX
-	CMPL $0, %EAX
-	JE rot_02
-	JMP rot_03
-rot_04:
-	PUSHL _i
-	PUSHL _i
-	PUSHL $1
-	POPL %EBX
-	POPL %EAX
-	ADDL %EBX, %EAX
-	PUSHL %EAX
-	POPL %EDX
-	MOVL %EDX, _i
-	JMP rot_01
-rot_03:
-	PUSHL _i
-	PUSHL $2
-	POPL %EAX
-	POPL %EDX
-	CMPL %EAX, %EDX
-	MOVL $0, %EAX
-	SETL  %AL
-	PUSHL %EAX
-	POPL %EAX
-	CMPL $0, %EAX
-	JE rot_05
+_start:
 	MOVL $_str_0Len, %EDX
 	MOVL $_str_0, %ECX
 	CALL _writeLit
 	CALL _writeln
-	JMP rot_04 #CONTINUE 
- 		# terminou o bloco...
-	JMP rot_06
-rot_05:
-rot_06:
-	PUSHL _i
-	PUSHL $8
-	POPL %EAX
-	POPL %EDX
-	CMPL %EAX, %EDX
-	MOVL $0, %EAX
-	SETG  %AL
-	PUSHL %EAX
-	POPL %EAX
-	CMPL $0, %EAX
-	JE rot_07
-	MOVL $_str_1Len, %EDX
-	MOVL $_str_1, %ECX
-	CALL _writeLit
-	CALL _writeln
-	JMP rot_02 #BREAK 
-		# terminou o bloco...
-	JMP rot_08
-rot_07:
-rot_08:
-		# terminou o bloco...
-	JMP rot_04
-rot_02:
 
 
 
@@ -172,12 +107,7 @@ _fimread2:
 #
 # variaveis globais
 #
-_num:	.zero 4
-_cont:	.zero 4
-_result:	.zero 4
-_atual:	.zero 4
-_fim:	.zero 4
-_i:	.zero 4
+_vetor:	.zero 4
 
 #
 # area de literais
@@ -189,8 +119,5 @@ __fim_msg:
 
 
 _str_0:
-	 .ascii "teste CONTINUE"
+	 .ascii "VETORES"
 _str_0Len = . - _str_0
-_str_1:
-	 .ascii "teste BREAK"
-_str_1Len = . - _str_1

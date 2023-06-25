@@ -13,9 +13,11 @@ void main() {
 	     if(i < 2){
           write("teste CONTINUE");
           continue;
-       }       
+       }
+       if(i > 8 ){       
         write("teste BREAK");
         break;
+       }
       
       
    }
