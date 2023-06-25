@@ -7,7 +7,7 @@
  
 
 %token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE
-%token WHILE, FOR, TRUE, FALSE, IF, ELSE
+%token WHILE, FOR, TRUE, FALSE, IF, ELSE, CONTINUE, BREAK
 %token EQ, LEQ, GEQ, NEQ 
 %token AND, OR, INCR, DO
 
@@ -120,60 +120,49 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
 			pRot.pop();
 							
 		} 
-	| FOR '(' ExpOpc ';' {
-			System.out.println("\tPOPL %EAX");
-			pRot.push(proxRot);  proxRot += 4;
-			System.out.printf("rot_%02d:\n",pRot.peek());
-
-
-
-			} 
-			ExpOpc ';'
-			 {
-				System.out.println("\tPOPL %EAX");
-				System.out.println("\tCMPL $0, %EAX");
-				System.out.printf("\tJE rot_%02d\n", pRot.peek() + 1);
-				System.out.printf("\tJMP rot_%02d\n", pRot.peek() + 2);
-				System.out.printf("rot_%02d:\n",pRot.peek() + 3);
-
-				//implementação
-
-				
-
-
-			 }
-			ExpOpc
+	| FOR  '(' ExpOpc ';' {
+                    System.out.println("\tPOPL %EAX");
+                    pRot.push(proxRot);  proxRot += 4;
+                    System.out.printf("rot%02d:\n",pRot.peek());
+                  } 
+             ExpOpc ';' 
+             { System.out.println("\tPOPL %EAX");
+               System.out.println("\tCMPL $0, %EAX");
+               System.out.printf("\tJE rot%02d\n", pRot.peek()+1); //	JE rot02
+               System.out.printf("\tJMP rot%02d\n", pRot.peek()+2); //	JMP rot03
+               System.out.printf("rot%02d:\n",pRot.peek()+3);
+             }
+              ExpOpc {
+                        System.out.printf("\tJMP rot%02d\n", pRot.peek()); //JMP rot01
+                        System.out.printf("rot%02d:\n",pRot.peek()+2);
+                     }
+              ')' cmd {
+                        System.out.printf("\tJMP rot%02d\n", pRot.peek()+3); // JMP rot04
+                        System.out.printf("rot%02d:\n",pRot.peek()+1);
+                        }
+	| CONTINUE  ';'
+                {
+                    System.out.printf("\tJMP rot%02d #continue\n ", pRot.peek()+3); // peek => rot_04?
+                }
+	| BREAK  ';'
 			{
-				System.out.printf("\tJMP rot_%02d\n", pRot.peek());
-				System.out.printf("rot_%02d:\n",pRot.peek() + 2);
-
-				//implementação
-
+				System.out.printf("\tJMP rot%02d #break\n", pRot.peek()+1); // peek => rot_04?
 			}
-			')' cmd {
-				System.out.printf("\tJMP rot_%02d\n", pRot.peek() + 3);
-				System.out.printf("rot_%02d:\n",pRot.peek() + 1);
-
-				//implementação
-
-				
-
-			} 
 							
-			| IF '(' exp {	
-											pRot.push (proxRot);  proxRot += 2;
-															
-											System.out.println("\tPOPL %EAX");
-											System.out.println("\tCMPL $0, %EAX");
-											System.out.printf("\tJE rot_%02d\n", pRot.peek());
-										}
-								')' cmd 
+	| IF '(' exp {	
+									pRot.push (proxRot);  proxRot += 2;
+													
+									System.out.println("\tPOPL %EAX");
+									System.out.println("\tCMPL $0, %EAX");
+									System.out.printf("\tJE rot_%02d\n", pRot.peek());
+								}
+						')' cmd 
 
-             restoIf {
-											System.out.printf("rot_%02d:\n",pRot.peek()+1);
-											pRot.pop();
-										}
-     ;
+		restoIf {
+									System.out.printf("rot_%02d:\n",pRot.peek()+1);
+									pRot.pop();
+								}
+	;
 
 ExpOpc: exp
 	| {

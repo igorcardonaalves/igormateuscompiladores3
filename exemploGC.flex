@@ -79,6 +79,8 @@ false   { return Parser.FALSE; }
 do   { return Parser.DO; }
 
 for { return Parser.FOR; }
+continue {return Parser.CONTINUE;}
+break {return Parser.BREAK;}
 
 
 [a-zA-Z]+([a-zA-Z0-9]+)? { yyparser.yylval = new ParserVal(yytext());
