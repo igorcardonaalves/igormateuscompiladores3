@@ -9,13 +9,7 @@ int i;
 void main() { 
 	
    for(i=0; i < 10; i++ ){
-	     write("ANTES DO CONTINUE ");   
-      continue;
-      write("DEPOIS DO COTINUE"); 
-      break;
-      write("DEPOIS DO BREAK"); 
-      
-
+	     write("este é um for");   
    }
  } 
 

@@ -466,7 +466,7 @@ final static String yyrule[] = {
 "exp : ID '=' exp",
 };
 
-//#line 265 "exemploGC.y"
+//#line 272 "exemploGC.y"
 
   private Yylex lexer;
 
@@ -549,6 +549,8 @@ final static String yyrule[] = {
     		}
    		System.out.println("\tPUSHL %EAX");
 		}
+
+	public int RotCurrentFor=-1; //variavel para salvar o context do for atual
 
 	public void gcExpRel(int oprel) {
 
@@ -717,7 +719,7 @@ final static String yyrule[] = {
 	      }		
    }
    
-//#line 649 "Parser.java"
+//#line 651 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1024,10 +1026,12 @@ case 27:
                     System.out.println("\tPOPL %EAX");
                     pRot.push(proxRot);  proxRot += 4;
                     System.out.printf("rot_%02d:\n",pRot.peek());
+					RotCurrentFor = pRot.size();
+
                   }
 break;
 case 28:
-//#line 155 "exemploGC.y"
+//#line 157 "exemploGC.y"
 { System.out.println("\tPOPL %EAX");
                System.out.println("\tCMPL $0, %EAX");
                System.out.printf("\tJE rot_%02d\n", pRot.peek()+1); /*	JE rot02*/
@@ -1036,33 +1040,38 @@ case 28:
              }
 break;
 case 29:
-//#line 161 "exemploGC.y"
+//#line 163 "exemploGC.y"
 {
                         System.out.printf("\tJMP rot_%02d\n", pRot.peek()); /*JMP rot01*/
                         System.out.printf("rot_%02d:\n",pRot.peek()+2);
                      }
 break;
 case 30:
-//#line 165 "exemploGC.y"
+//#line 167 "exemploGC.y"
 {
                         System.out.printf("\tJMP rot_%02d\n", pRot.peek()+3); /* JMP rot04*/
                         System.out.printf("rot_%02d:\n",pRot.peek()+1);
                         }
 break;
 case 31:
-//#line 170 "exemploGC.y"
+//#line 172 "exemploGC.y"
 {
-                    System.out.printf("\tJMP rot_%02d ;continue\n ", pRot.peek()+3); /* peek => rot_04?*/
+
+					int continue_rot = RotCurrentFor + 3;
+					System.out.printf("\tJMP rot_%02d #CONTINUE \n ", continue_rot);
+                    /*System.out.printf("\tJMP rot_%02d #CONTINUE \n ", pRot.peek()+3); // peek => rot_04?*/
                 }
 break;
 case 32:
-//#line 174 "exemploGC.y"
+//#line 179 "exemploGC.y"
 {
-				System.out.printf("\tJMP rot_%02d ;break\n", pRot.peek()+1); /* peek => rot_04?*/
+					int break_rot = RotCurrentFor + 1;
+                System.out.printf("\tJMP rot_%02d #BREAK \n", break_rot); /* peek => rot_04?*/
+				/*System.out.printf("\tJMP rot_%02d #BREAK \n", pRot.peek()+1); // peek => rot_04?*/
 			}
 break;
 case 33:
-//#line 178 "exemploGC.y"
+//#line 185 "exemploGC.y"
 {	
 									pRot.push (proxRot);  proxRot += 2;
 													
@@ -1072,20 +1081,20 @@ case 33:
 								}
 break;
 case 34:
-//#line 187 "exemploGC.y"
+//#line 194 "exemploGC.y"
 {
 									System.out.printf("rot_%02d:\n",pRot.peek()+1);
 									pRot.pop();
 								}
 break;
 case 36:
-//#line 194 "exemploGC.y"
+//#line 201 "exemploGC.y"
 {
 		System.out.println("\tPUSHL $1");
 	}
 break;
 case 37:
-//#line 201 "exemploGC.y"
+//#line 208 "exemploGC.y"
 {
 					System.out.printf("\tJMP rot_%02d\n", pRot.peek()+1);
 					System.out.printf("rot_%02d:\n",pRot.peek());
@@ -1093,30 +1102,30 @@ case 37:
 										}
 break;
 case 39:
-//#line 210 "exemploGC.y"
+//#line 217 "exemploGC.y"
 {
 		    System.out.printf("\tJMP rot_%02d\n", pRot.peek()+1);
 				System.out.printf("rot_%02d:\n",pRot.peek());
 				}
 break;
 case 40:
-//#line 217 "exemploGC.y"
+//#line 224 "exemploGC.y"
 { System.out.println("\tPUSHL $"+val_peek(0).sval); }
 break;
 case 41:
-//#line 218 "exemploGC.y"
+//#line 225 "exemploGC.y"
 { System.out.println("\tPUSHL $1"); }
 break;
 case 42:
-//#line 219 "exemploGC.y"
+//#line 226 "exemploGC.y"
 { System.out.println("\tPUSHL $0"); }
 break;
 case 43:
-//#line 220 "exemploGC.y"
+//#line 227 "exemploGC.y"
 { System.out.println("\tPUSHL _"+val_peek(0).sval); }
 break;
 case 44:
-//#line 221 "exemploGC.y"
+//#line 228 "exemploGC.y"
 { 
 				System.out.println("\tPUSHL _"+val_peek(1).sval);
 				System.out.println("\tPUSHL _"+val_peek(1).sval);
@@ -1127,7 +1136,7 @@ case 44:
 				}
 break;
 case 45:
-//#line 229 "exemploGC.y"
+//#line 236 "exemploGC.y"
 { 
 				System.out.println("\tPUSHL _"+val_peek(0).sval);
 				System.out.println("\tPUSHL $1");
@@ -1138,69 +1147,69 @@ case 45:
 				}
 break;
 case 47:
-//#line 238 "exemploGC.y"
+//#line 245 "exemploGC.y"
 { gcExpNot(); }
 break;
 case 48:
-//#line 240 "exemploGC.y"
+//#line 247 "exemploGC.y"
 { gcExpArit('+'); }
 break;
 case 49:
-//#line 241 "exemploGC.y"
+//#line 248 "exemploGC.y"
 { gcExpArit('-'); }
 break;
 case 50:
-//#line 242 "exemploGC.y"
+//#line 249 "exemploGC.y"
 { gcExpArit('*'); }
 break;
 case 51:
-//#line 243 "exemploGC.y"
+//#line 250 "exemploGC.y"
 { gcExpArit('/'); }
 break;
 case 52:
-//#line 245 "exemploGC.y"
+//#line 252 "exemploGC.y"
 { gcExpArit('%'); }
 break;
 case 53:
-//#line 247 "exemploGC.y"
+//#line 254 "exemploGC.y"
 { gcExpRel('>'); }
 break;
 case 54:
-//#line 248 "exemploGC.y"
+//#line 255 "exemploGC.y"
 { gcExpRel('<'); }
 break;
 case 55:
-//#line 249 "exemploGC.y"
+//#line 256 "exemploGC.y"
 { gcExpRel(EQ); }
 break;
 case 56:
-//#line 250 "exemploGC.y"
+//#line 257 "exemploGC.y"
 { gcExpRel(LEQ); }
 break;
 case 57:
-//#line 251 "exemploGC.y"
+//#line 258 "exemploGC.y"
 { gcExpRel(GEQ); }
 break;
 case 58:
-//#line 252 "exemploGC.y"
+//#line 259 "exemploGC.y"
 { gcExpRel(NEQ); }
 break;
 case 59:
-//#line 254 "exemploGC.y"
+//#line 261 "exemploGC.y"
 { gcExpLog(OR); }
 break;
 case 60:
-//#line 255 "exemploGC.y"
+//#line 262 "exemploGC.y"
 { gcExpLog(AND); }
 break;
 case 61:
-//#line 256 "exemploGC.y"
+//#line 263 "exemploGC.y"
 {  System.out.println("\tPOPL %EDX");
 		 					System.out.println("\tPUSHL %EDX");
   						   System.out.println("\tMOVL %EDX, _"+val_peek(2).sval);
 					     }
 break;
-//#line 1127 "Parser.java"
+//#line 1136 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

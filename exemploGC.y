@@ -150,6 +150,8 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
                     System.out.println("\tPOPL %EAX");
                     pRot.push(proxRot);  proxRot += 4;
                     System.out.printf("rot_%02d:\n",pRot.peek());
+					RotCurrentFor = pRot.size();
+
                   } 
              ExpOpc ';' 
              { System.out.println("\tPOPL %EAX");
@@ -168,11 +170,16 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
                         }
 	| CONTINUE  ';'
                 {
-                    System.out.printf("\tJMP rot_%02d ;continue\n ", pRot.peek()+3); // peek => rot_04?
+
+					int continue_rot = RotCurrentFor + 3;
+					System.out.printf("\tJMP rot_%02d #CONTINUE \n ", continue_rot);
+                    //System.out.printf("\tJMP rot_%02d #CONTINUE \n ", pRot.peek()+3); // peek => rot_04?
                 }
 	| BREAK  ';'
 			{
-				System.out.printf("\tJMP rot_%02d ;break\n", pRot.peek()+1); // peek => rot_04?
+					int break_rot = RotCurrentFor + 1;
+                System.out.printf("\tJMP rot_%02d #BREAK \n", break_rot); // peek => rot_04?
+				//System.out.printf("\tJMP rot_%02d #BREAK \n", pRot.peek()+1); // peek => rot_04?
 			}
 							
 	| IF '(' exp {	
@@ -344,6 +351,8 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
     		}
    		System.out.println("\tPUSHL %EAX");
 		}
+
+	public int RotCurrentFor=-1; //variavel para salvar o context do for atual
 
 	public void gcExpRel(int oprel) {
 

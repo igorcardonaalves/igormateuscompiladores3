@@ -1,0 +1,23 @@
+int num;
+int cont;
+int result;
+int atual;
+int fim;
+int i;
+
+
+void main() { 
+	
+   for(i=0; i < 10; i++ ){
+    
+	     if(i < 2){
+          write("teste CONTINUE");
+          continue;
+       }       
+        write("teste BREAK");
+        break;
+      
+      
+   }
+ } 
+
