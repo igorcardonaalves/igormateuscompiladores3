@@ -3,6 +3,9 @@ int b;
 int c;
 
 void main() {  
+
+    
+
     a = b = c = 42;
     
     write (" a (1)=  ", a );

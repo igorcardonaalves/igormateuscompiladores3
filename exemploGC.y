@@ -20,11 +20,12 @@
 %left '!' 
 %nonassoc INCR
 
+
 %type <sval> ID
 %type <sval> LIT
 %type <sval> NUM
 %type <ival> type
-
+%type <ival> typeArrayInt
 
 %%
 
@@ -40,7 +41,32 @@ decl : type ID ';' {  TS_entry nodo = ts.pesquisa($2);
     	                if (nodo != null) 
                             yyerror("(sem) variavel >" + $2 + "< jah declarada");
                         else ts.insert(new TS_entry($2, $1)); }
-      ;
+	| ArrayDec   
+	  ;
+
+
+ArrayDec : type ID '['NUM']' ';' {
+							
+						 TS_entry nodo = ts.pesquisa($2);
+    	                if (nodo != null){ 
+                            yyerror("(sem) variavel >" + $2 + "< jah declarada");}
+						else if($1 != Parser.INT){
+							yyerror("Array com tipo diferente de INT");
+						}
+                        else {							
+							ts.insert(new TS_entry($2, $1)); 
+							//declaração do array 
+							System.out.println("\tPOPL %EAX");	//assume que o tamanho do array ta em EAX
+							System.out.println("\tIMULL $4, %EAX"); // Multiplica o EAX por 2 tamanho de um int 
+							System.out.println("\tSUB %ESP, %EAX");	// subtrai o esp o VALOR DO EAX Aloca a quantidade de memoria 	
+							pRot.push(proxRot);  proxRot += 2;
+							System.out.printf("rot_%02d:\n", pRot.peek()); // peek no rotulo 
+							}	
+						}
+	;
+
+// typeArrayInt : INT { $$ = INT; }
+//     ;
 
 type : INT    { $$ = INT; }
      | FLOAT  { $$ = FLOAT; }
@@ -123,30 +149,30 @@ cmd :  exp	';' {  System.out.println("\tPOPL %EDX");
 	| FOR  '(' ExpOpc ';' {
                     System.out.println("\tPOPL %EAX");
                     pRot.push(proxRot);  proxRot += 4;
-                    System.out.printf("rot%02d:\n",pRot.peek());
+                    System.out.printf("rot_%02d:\n",pRot.peek());
                   } 
              ExpOpc ';' 
              { System.out.println("\tPOPL %EAX");
                System.out.println("\tCMPL $0, %EAX");
-               System.out.printf("\tJE rot%02d\n", pRot.peek()+1); //	JE rot02
-               System.out.printf("\tJMP rot%02d\n", pRot.peek()+2); //	JMP rot03
-               System.out.printf("rot%02d:\n",pRot.peek()+3);
+               System.out.printf("\tJE rot_%02d\n", pRot.peek()+1); //	JE rot02
+               System.out.printf("\tJMP rot_%02d\n", pRot.peek()+2); //	JMP rot03
+               System.out.printf("rot_%02d:\n",pRot.peek()+3);
              }
               ExpOpc {
-                        System.out.printf("\tJMP rot%02d\n", pRot.peek()); //JMP rot01
-                        System.out.printf("rot%02d:\n",pRot.peek()+2);
+                        System.out.printf("\tJMP rot_%02d\n", pRot.peek()); //JMP rot01
+                        System.out.printf("rot_%02d:\n",pRot.peek()+2);
                      }
               ')' cmd {
-                        System.out.printf("\tJMP rot%02d\n", pRot.peek()+3); // JMP rot04
-                        System.out.printf("rot%02d:\n",pRot.peek()+1);
+                        System.out.printf("\tJMP rot_%02d\n", pRot.peek()+3); // JMP rot04
+                        System.out.printf("rot_%02d:\n",pRot.peek()+1);
                         }
 	| CONTINUE  ';'
                 {
-                    System.out.printf("\tJMP rot%02d #continue\n ", pRot.peek()+3); // peek => rot_04?
+                    System.out.printf("\tJMP rot_%02d ;continue\n ", pRot.peek()+3); // peek => rot_04?
                 }
 	| BREAK  ';'
 			{
-				System.out.printf("\tJMP rot%02d #break\n", pRot.peek()+1); // peek => rot_04?
+				System.out.printf("\tJMP rot_%02d ;break\n", pRot.peek()+1); // peek => rot_04?
 			}
 							
 	| IF '(' exp {	
